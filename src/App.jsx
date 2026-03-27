@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { RESULTS } from "./results.js";
 
 // ─── DATA ───
@@ -131,21 +131,6 @@ function getSlotTeam(slotDef, results) {
   return null;
 }
 
-// ─── LOCAL STORAGE (team names only) ───
-const STORAGE_KEY_TEAMS = "eidBaibalaa_teams";
-
-function loadFromStorage(key, fallback) {
-  try {
-    const stored = localStorage.getItem(key);
-    if (stored) return JSON.parse(stored);
-  } catch (e) { /* ignore */ }
-  return fallback;
-}
-
-function saveToStorage(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
-}
-
 // ─── COMPONENTS ───
 
 function Slot({ teamKey, winner, teams }) {
@@ -240,11 +225,8 @@ function GFSlot({ label, teamKey, winner, teams }) {
 
 // ─── MAIN APP ───
 export default function EidBaibalaa() {
-  const [teams,   setTeams]   = useState(() => loadFromStorage(STORAGE_KEY_TEAMS, { ...INIT_TEAMS }));
-  const [tab,     setTab]     = useState("upper");
-  const [editOpen,setEditOpen]= useState(false);
-
-  useEffect(() => { saveToStorage(STORAGE_KEY_TEAMS, teams); }, [teams]);
+  const teams  = INIT_TEAMS;
+  const [tab,  setTab] = useState("upper");
 
   // Results come from src/results.js — edit that file on GitHub to update scores.
   const results = RESULTS;
@@ -271,7 +253,6 @@ export default function EidBaibalaa() {
           <h1 style={S.title}>EID BAIBALAA</h1>
           <div style={S.subtitle}>Double Elimination · 38 Teams · {played} matches played</div>
         </div>
-        <button style={S.btnP} onClick={() => setEditOpen(true)}>Edit Names</button>
       </div>
 
       {/* TABS */}
@@ -324,37 +305,6 @@ export default function EidBaibalaa() {
         )}
       </div>
 
-      {/* TEAM NAME EDITOR */}
-      {editOpen && (
-        <div style={S.overlay} onClick={e => { if (e.target === e.currentTarget) setEditOpen(false); }}>
-          <div style={S.panel}>
-            <h2 style={{ fontWeight: 800, fontSize: 18, color: "#f97316", textTransform: "uppercase", letterSpacing: 1 }}>
-              Edit Team Names
-            </h2>
-            <p style={{ fontSize: 12, color: "#64748b", margin: "4px 0 16px" }}>
-              Changes apply instantly across the bracket (saved locally in this browser).
-            </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-              {Object.keys(INIT_TEAMS).map(k => (
-                <div key={k} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, color: "#334155", width: 26, flexShrink: 0 }}>{k}</span>
-                  <input
-                    value={teams[k]}
-                    onChange={e => setTeams(prev => ({ ...prev, [k]: e.target.value }))}
-                    placeholder={INIT_TEAMS[k]}
-                    style={S.input}
-                    onFocus={e => e.target.style.borderColor = "#f97316"}
-                    onBlur={e  => e.target.style.borderColor = "#1e293b"}
-                  />
-                </div>
-              ))}
-            </div>
-            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 18 }}>
-              <button style={S.btnP} onClick={() => setEditOpen(false)}>Done</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -365,7 +315,6 @@ const S = {
   header:    { background: "linear-gradient(135deg,#0f172a,#1a1040)", borderBottom: "2px solid #f97316", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 },
   title:     { fontWeight: 800, fontSize: 22, letterSpacing: 3, background: "linear-gradient(90deg,#f97316,#fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", margin: 0 },
   subtitle:  { fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: "#64748b", marginTop: 2 },
-  btnP:      { fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 11, padding: "7px 14px", border: "none", borderRadius: 6, cursor: "pointer", textTransform: "uppercase", letterSpacing: 1, background: "#f97316", color: "#0c1120" },
   tabs:      { display: "flex", background: "#0f172a", borderBottom: "1px solid #1e293b", position: "sticky", top: 0, zIndex: 10 },
   tab:       { flex: 1, padding: "11px 8px", textAlign: "center", fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: 1.5, textTransform: "uppercase", cursor: "pointer", border: "none", background: "transparent", color: "#475569", borderBottom: "3px solid transparent", transition: "all .15s" },
   tabOn:     { color: "#f97316", borderBottomColor: "#f97316", background: "#f9731608" },
@@ -388,7 +337,4 @@ const S = {
   gfVs:      { fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: "#475569", margin: "4px 0", letterSpacing: 2, textAlign: "center" },
   champ:     { marginTop: 20, padding: "16px 24px", background: "linear-gradient(135deg,#f97316,#fbbf24)", borderRadius: 12, textAlign: "center" },
   hint:      { marginTop: 20, fontSize: 12, color: "#475569", fontFamily: "'IBM Plex Mono',monospace", textAlign: "center" },
-  overlay:   { position: "fixed", inset: 0, background: "#000c", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
-  panel:     { background: "#111827", border: "1px solid #1e293b", borderRadius: 14, width: "100%", maxWidth: 720, maxHeight: "85vh", overflowY: "auto", padding: 24 },
-  input:     { flex: 1, background: "#0c1120", border: "1px solid #1e293b", borderRadius: 5, padding: "7px 10px", fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#e2e8f0", outline: "none", transition: "border-color .15s", width: "100%" },
 };
