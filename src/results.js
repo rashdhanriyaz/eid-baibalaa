@@ -28,7 +28,7 @@
 
 export const RESULTS = {
   // ── Upper R1 ─────────────────────────────────────────────────────────────
-  // 1: "t1",   // Kuda Henveiru United  vs  The One Sports Club
+  1: "t2",   // Kuda Henveiru United  vs  The One Sports Club
   // 2: "t3",   // Kuda Henveiru Lions   vs  The Beegees
   // 3: "t5",   // Lorenzo Sports Club   vs  TC Sports Club
   // 4: "t7",   // Buru Sports Club      vs  Club Kaasinjee
