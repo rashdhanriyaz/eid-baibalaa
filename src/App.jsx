@@ -1,16 +1,21 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { RESULTS } from "./results.js";
 
 // ─── DATA ───
 const INIT_TEAMS = {
-  t1:"Kuda Henveiru United",t2:"The One Sports Club",t3:"Kuda Henveiru Lions",t4:"The Beegees",
-  t5:"Lorenzo SC",t6:"TC SC",t7:"Buru SC",t8:"CK",t9:"Kaasinjaas",t10:"TC Fraternity",
-  t11:"The Wolves Club",t12:"Janavareeyans",t13:"TC Red Lions",t14:"Club Teenage",
-  t15:"Club Zefrol",t16:"Odi Sports Club",t17:"SDZ Sharks",t18:"Odi Titans",t19:"Zeppo NG",
-  t20:"Kuda Henveiru Street",t21:"Zeppo SC",t22:"TC Classique",t23:"LT Sports Club",
-  t24:"Hahha Vaikanmathi",t25:"West Sports Club",t26:"BG Sports Club",
-  t27:"Janavaree Magu SC",t28:"Alpha Wolves",t29:"Lorenzo Hyenas",t30:"JEB United",
-  t31:"Teenage Veterans",t32:"Club 010",t33:"Meet the Eagles",t34:"VNT SC",t35:"VK SC",
-  t36:"Hulhumale' SC",t37:"Lions & Tigers",t38:"TFT"
+  t1:"Kuda Henveiru United",   t2:"The One Sports Club",      t3:"Kuda Henveiru Lions",
+  t4:"The Beegees",             t5:"Lorenzo Sports Club",      t6:"TC Sports Club",
+  t7:"Buru Sports Club",        t8:"Club Kaasinjee",           t9:"Kaasinjaas",
+  t10:"TC Fraternity",          t11:"The Wolves Club",         t12:"Janavareeyans",
+  t13:"TC Red Lions",           t14:"Club Teenage",            t15:"Club Zefrol",
+  t16:"Odi Sports Club",        t17:"SDZ Sharks",              t18:"Odi Titans",
+  t19:"Zeppo New Generation",   t20:"Kuda Henveiru Street",    t21:"Zeppo Sports Club",
+  t22:"TC Classique",           t23:"LT Sports Club",          t24:"Hahha Vaikanmathi",
+  t25:"West Sports Club",       t26:"BG Sports Club",          t27:"Janavaree Magu Sports Club",
+  t28:"Alpha Wolves",           t29:"Lorenzo Hyenas",          t30:"JEB United",
+  t31:"Teenage Veterans",       t32:"Club 010",                t33:"Meet the Eagles",
+  t34:"VNT Sports Club",        t35:"VK Sports Club",          t36:"Hulhumale' Sports Club",
+  t37:"Lions & Tigers",         t38:"TFT",
 };
 
 const MATCH_DEFS = {
@@ -91,23 +96,23 @@ const MATCH_DEFS = {
 };
 
 const UPPER_ROUNDS = [
-  {key:"Upper R1",label:"Round 1",ids:[1,2,3,4,5,6]},
-  {key:"Upper R2",label:"Round 2",ids:[17,7,8,9,18,10,19,11,20,12,13,14,21,15,22,16]},
-  {key:"Upper R3",label:"Round 3",ids:[39,37,40,41,42,38,43,44]},
-  {key:"Upper QF",label:"Quarter Finals",ids:[57,58,59,60]},
-  {key:"Upper SF",label:"Semi Finals",ids:[67,68]},
-  {key:"Upper Final",label:"Upper Final",ids:[72]},
+  {key:"Upper R1",    label:"Round 1",      ids:[1,2,3,4,5,6]},
+  {key:"Upper R2",    label:"Round 2",      ids:[17,7,8,9,18,10,19,11,20,12,13,14,21,15,22,16]},
+  {key:"Upper R3",    label:"Round 3",      ids:[39,37,40,41,42,38,43,44]},
+  {key:"Upper QF",    label:"Quarter Finals",ids:[57,58,59,60]},
+  {key:"Upper SF",    label:"Semi Finals",  ids:[67,68]},
+  {key:"Upper Final", label:"Upper Final",  ids:[72]},
 ];
 const LOWER_ROUNDS = [
-  {key:"Losers R1",label:"Losers R1",ids:[28,27,26,25,24,23]},
-  {key:"Losers R2",label:"Losers R2",ids:[36,30,35,34,33,29,32,31]},
-  {key:"Losers R3",label:"Losers R3",ids:[49,48,45,47,52,51,46,50],drop:true},
-  {key:"Losers R4",label:"Losers R4",ids:[54,53,56,55]},
-  {key:"Losers R5",label:"Losers R5",ids:[63,64,61,62],drop:true},
-  {key:"Losers R6",label:"Losers R6",ids:[66,65]},
-  {key:"Losers R7",label:"Losers R7",ids:[69,70],drop:true},
-  {key:"Losers R8",label:"Losers R8",ids:[71]},
-  {key:"Losers Final",label:"Losers Final",ids:[73],drop:true},
+  {key:"Losers R1",    label:"Losers R1",    ids:[28,27,26,25,24,23]},
+  {key:"Losers R2",    label:"Losers R2",    ids:[36,30,35,34,33,29,32,31]},
+  {key:"Losers R3",    label:"Losers R3",    ids:[49,48,45,47,52,51,46,50], drop:true},
+  {key:"Losers R4",    label:"Losers R4",    ids:[54,53,56,55]},
+  {key:"Losers R5",    label:"Losers R5",    ids:[63,64,61,62],             drop:true},
+  {key:"Losers R6",    label:"Losers R6",    ids:[66,65]},
+  {key:"Losers R7",    label:"Losers R7",    ids:[69,70],                   drop:true},
+  {key:"Losers R8",    label:"Losers R8",    ids:[71]},
+  {key:"Losers Final", label:"Losers Final", ids:[73],                      drop:true},
 ];
 
 // ─── LOGIC ───
@@ -126,25 +131,7 @@ function getSlotTeam(slotDef, results) {
   return null;
 }
 
-function getDependents(mid) {
-  const deps = new Set();
-  const queue = [mid];
-  while (queue.length) {
-    const cur = queue.shift();
-    Object.entries(MATCH_DEFS).forEach(([id, def]) => {
-      const n = parseInt(id);
-      if (deps.has(n)) return;
-      if (def.s1.w === cur || def.s1.l === cur || def.s2.w === cur || def.s2.l === cur) {
-        deps.add(n);
-        queue.push(n);
-      }
-    });
-  }
-  return deps;
-}
-
-// ─── LOCAL STORAGE ───
-const STORAGE_KEY_RESULTS = "eidBaibalaa_results";
+// ─── LOCAL STORAGE (team names only) ───
 const STORAGE_KEY_TEAMS = "eidBaibalaa_teams";
 
 function loadFromStorage(key, fallback) {
@@ -156,58 +143,59 @@ function loadFromStorage(key, fallback) {
 }
 
 function saveToStorage(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (e) { /* ignore */ }
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
 }
 
 // ─── COMPONENTS ───
-function Slot({ teamKey, winner, canPick, mid, teams, onPick, onUndo, isLosers }) {
-  if (!teamKey) return <div style={S.slot}><span style={{ color: "#334155", fontStyle: "italic", fontSize: 11 }}>TBD</span></div>;
-  const name = teams[teamKey] || teamKey;
-  const isWin = winner === teamKey;
+
+function Slot({ teamKey, winner, teams }) {
+  if (!teamKey) {
+    return (
+      <div style={S.slot}>
+        <span style={{ color: "#334155", fontStyle: "italic", fontSize: 11 }}>TBD</span>
+      </div>
+    );
+  }
+  const name  = teams[teamKey] || teamKey;
+  const isWin  = winner === teamKey;
   const isLose = winner && winner !== teamKey;
 
-  const style = {
-    ...S.slot,
-    ...(canPick ? S.pick : {}),
-    ...(isWin ? S.win : {}),
-    ...(isLose ? S.lose : {}),
-  };
-
   return (
-    <div
-      style={style}
-      onClick={() => {
-        if (canPick) onPick(mid, teamKey);
-        else if (isWin) onUndo(mid);
-      }}
-      onMouseEnter={e => { if (canPick || isWin) e.currentTarget.style.background = isWin ? "#22c55e22" : "#1e293b"; }}
-      onMouseLeave={e => { e.currentTarget.style.background = isWin ? "linear-gradient(90deg,#22c55e18,#22c55e08)" : "transparent"; }}
-    >
-      {name}
+    <div style={{ ...S.slot, ...(isWin ? S.win : {}), ...(isLose ? S.lose : {}) }}>
+      <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        {name}
+      </span>
+      <span style={{
+        fontSize: 9,
+        fontFamily: "'IBM Plex Mono',monospace",
+        color: isWin ? "#22c55e44" : "#1e3a5f",
+        marginLeft: 5,
+        flexShrink: 0,
+        letterSpacing: 0,
+      }}>
+        {teamKey}
+      </span>
     </div>
   );
 }
 
-function MatchCard({ mid, results, teams, onPick, onUndo, isLosers }) {
-  const def = MATCH_DEFS[mid];
-  const p1 = getSlotTeam(def.s1, results);
-  const p2 = getSlotTeam(def.s2, results);
+function MatchCard({ mid, results, teams }) {
+  const def    = MATCH_DEFS[mid];
+  const p1     = getSlotTeam(def.s1, results);
+  const p2     = getSlotTeam(def.s2, results);
   const winner = results[mid] || null;
-  const canPick = p1 && p2 && !winner;
 
   return (
     <div style={{ ...S.card, borderColor: winner ? "#22c55e25" : "#ffffff10" }}>
       <span style={S.mnum}>M{mid}</span>
-      <Slot teamKey={p1} winner={winner} canPick={canPick} mid={mid} teams={teams} onPick={onPick} onUndo={onUndo} isLosers={isLosers} />
+      <Slot teamKey={p1} winner={winner} teams={teams} />
       <div style={S.div} />
-      <Slot teamKey={p2} winner={winner} canPick={canPick} mid={mid} teams={teams} onPick={onPick} onUndo={onUndo} isLosers={isLosers} />
+      <Slot teamKey={p2} winner={winner} teams={teams} />
     </div>
   );
 }
 
-function RoundCol({ label, ids, drop, results, teams, onPick, onUndo, isLosers }) {
+function RoundCol({ label, ids, drop, results, teams }) {
   return (
     <div style={S.roundCol}>
       <div style={{ ...S.rlabel, borderLeftColor: drop ? "#3b82f6" : "#f97316" }}>
@@ -215,79 +203,57 @@ function RoundCol({ label, ids, drop, results, teams, onPick, onUndo, isLosers }
         {drop && <span style={{ color: "#3b82f6", fontSize: 8, marginLeft: 6 }}>DROP</span>}
       </div>
       <div style={S.matchesCol}>
-        {ids.map(mid => <MatchCard key={mid} mid={mid} results={results} teams={teams} onPick={onPick} onUndo={onUndo} isLosers={isLosers} />)}
+        {ids.map(mid => <MatchCard key={mid} mid={mid} results={results} teams={teams} />)}
       </div>
     </div>
   );
 }
 
-function GFSlot({ label, teamKey, winner, canPick, mid, teams, onPick, onUndo }) {
-  const name = teamKey ? (teams[teamKey] || teamKey) : "Awaiting...";
-  const isWin = winner === teamKey;
+function GFSlot({ label, teamKey, winner, teams }) {
+  const name   = teamKey ? (teams[teamKey] || teamKey) : "Awaiting...";
+  const isWin  = winner === teamKey;
   const isLose = winner && winner !== teamKey;
+
   return (
-    <div
-      style={{
-        ...S.gfs,
-        ...(canPick ? { cursor: "pointer" } : {}),
-        ...(isWin ? S.gfWin : {}),
-        ...(isLose ? { opacity: .35, textDecoration: "line-through" } : {}),
-      }}
-      onClick={() => {
-        if (canPick && teamKey) onPick(mid, teamKey);
-        else if (isWin) onUndo(mid);
-      }}
-      onMouseEnter={e => { if (canPick) e.currentTarget.style.background = "#1e293b"; }}
-      onMouseLeave={e => { if (canPick) e.currentTarget.style.background = "#111827"; }}
-    >
+    <div style={{
+      ...S.gfs,
+      ...(isWin  ? S.gfWin : {}),
+      ...(isLose ? { opacity: .35, textDecoration: "line-through" } : {}),
+    }}>
       <div style={{ fontSize: 10, fontWeight: 400, opacity: 0.7, marginTop: 2 }}>{label}</div>
-      {name}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+        <span>{name}</span>
+        {teamKey && (
+          <span style={{
+            fontSize: 9,
+            fontFamily: "'IBM Plex Mono',monospace",
+            color: isWin ? "#0c112044" : "#1e3a5f",
+            flexShrink: 0,
+          }}>
+            {teamKey}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
 
 // ─── MAIN APP ───
 export default function EidBaibalaa() {
-  const [teams, setTeams] = useState(() => loadFromStorage(STORAGE_KEY_TEAMS, { ...INIT_TEAMS }));
-  const [results, setResults] = useState(() => loadFromStorage(STORAGE_KEY_RESULTS, {}));
-  const [tab, setTab] = useState("upper");
-  const [editOpen, setEditOpen] = useState(false);
+  const [teams,   setTeams]   = useState(() => loadFromStorage(STORAGE_KEY_TEAMS, { ...INIT_TEAMS }));
+  const [tab,     setTab]     = useState("upper");
+  const [editOpen,setEditOpen]= useState(false);
 
-  // Save to localStorage whenever results or teams change
-  useEffect(() => { saveToStorage(STORAGE_KEY_RESULTS, results); }, [results]);
   useEffect(() => { saveToStorage(STORAGE_KEY_TEAMS, teams); }, [teams]);
 
-  const pickWinner = useCallback((mid, teamKey) => {
-    setResults(prev => {
-      const next = { ...prev };
-      getDependents(mid).forEach(d => delete next[d]);
-      next[mid] = teamKey;
-      return next;
-    });
-  }, []);
+  // Results come from src/results.js — edit that file on GitHub to update scores.
+  const results = RESULTS;
 
-  const undoWinner = useCallback((mid) => {
-    setResults(prev => {
-      const next = { ...prev };
-      getDependents(mid).forEach(d => delete next[d]);
-      delete next[mid];
-      return next;
-    });
-  }, []);
-
-  const resetAll = () => {
-    if (confirm("Reset all results? This cannot be undone.")) {
-      setResults({});
-      setTeams({ ...INIT_TEAMS });
-    }
-  };
-
-  const gfDef = MATCH_DEFS[74];
-  const gfP1 = getSlotTeam(gfDef.s1, results);
-  const gfP2 = getSlotTeam(gfDef.s2, results);
+  const played   = Object.keys(results).length;
+  const gfDef    = MATCH_DEFS[74];
+  const gfP1     = getSlotTeam(gfDef.s1, results);
+  const gfP2     = getSlotTeam(gfDef.s2, results);
   const gfWinner = results[74] || null;
-  const gfCanPick = gfP1 && gfP2 && !gfWinner;
-  const played = Object.keys(results).length;
 
   return (
     <div style={S.root}>
@@ -305,16 +271,15 @@ export default function EidBaibalaa() {
           <h1 style={S.title}>EID BAIBALAA</h1>
           <div style={S.subtitle}>Double Elimination · 38 Teams · {played} matches played</div>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button style={S.btnP} onClick={() => setEditOpen(true)}>Edit Names</button>
-          <button style={S.btnD} onClick={resetAll}>Reset</button>
-        </div>
+        <button style={S.btnP} onClick={() => setEditOpen(true)}>Edit Names</button>
       </div>
 
       {/* TABS */}
       <div style={S.tabs}>
-        {[{ k: "upper", l: "Winners" }, { k: "lower", l: "Losers" }, { k: "finals", l: "Grand Finals" }].map(t => (
-          <button key={t.k} style={{ ...S.tab, ...(tab === t.k ? S.tabOn : {}) }} onClick={() => setTab(t.k)}>{t.l}</button>
+        {[{k:"upper",l:"Winners"},{k:"lower",l:"Losers"},{k:"finals",l:"Grand Finals"}].map(t => (
+          <button key={t.k} style={{ ...S.tab, ...(tab === t.k ? S.tabOn : {}) }} onClick={() => setTab(t.k)}>
+            {t.l}
+          </button>
         ))}
       </div>
 
@@ -322,23 +287,29 @@ export default function EidBaibalaa() {
       <div style={S.scroll}>
         {tab === "upper" && (
           <div style={S.bracket}>
-            {UPPER_ROUNDS.map(r => <RoundCol key={r.key} label={r.label} ids={r.ids} results={results} teams={teams} onPick={pickWinner} onUndo={undoWinner} />)}
+            {UPPER_ROUNDS.map(r => (
+              <RoundCol key={r.key} label={r.label} ids={r.ids} results={results} teams={teams} />
+            ))}
           </div>
         )}
         {tab === "lower" && (
           <div style={S.bracket}>
-            {LOWER_ROUNDS.map(r => <RoundCol key={r.key} label={r.label} ids={r.ids} drop={r.drop} results={results} teams={teams} onPick={pickWinner} onUndo={undoWinner} isLosers />)}
+            {LOWER_ROUNDS.map(r => (
+              <RoundCol key={r.key} label={r.label} ids={r.ids} drop={r.drop} results={results} teams={teams} />
+            ))}
           </div>
         )}
         {tab === "finals" && (
           <div style={S.finals}>
             <div style={S.gfCard}>
               <h3 style={S.gfTitle}>Grand Final</h3>
-              <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>Winners Bracket Champion vs Losers Bracket Champion</div>
+              <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>
+                Winners Bracket Champion vs Losers Bracket Champion
+              </div>
               <div style={{ marginTop: 16 }}>
-                <GFSlot label="From Winners" teamKey={gfP1} winner={gfWinner} canPick={gfCanPick} mid={74} teams={teams} onPick={pickWinner} onUndo={undoWinner} />
+                <GFSlot label="From Winners" teamKey={gfP1} winner={gfWinner} teams={teams} />
                 <div style={S.gfVs}>VS</div>
-                <GFSlot label="From Losers" teamKey={gfP2} winner={gfWinner} canPick={gfCanPick} mid={74} teams={teams} onPick={pickWinner} onUndo={undoWinner} />
+                <GFSlot label="From Losers"  teamKey={gfP2} winner={gfWinner} teams={teams} />
               </div>
               {gfWinner && (
                 <div style={S.champ}>
@@ -348,27 +319,32 @@ export default function EidBaibalaa() {
                 </div>
               )}
             </div>
-            <div style={S.hint}>Click a team to advance · Click the winner to undo</div>
+            <div style={S.hint}>Results are updated via <code style={{ fontSize: 11 }}>src/results.js</code> on GitHub</div>
           </div>
         )}
       </div>
 
-      {/* EDITOR */}
+      {/* TEAM NAME EDITOR */}
       {editOpen && (
         <div style={S.overlay} onClick={e => { if (e.target === e.currentTarget) setEditOpen(false); }}>
           <div style={S.panel}>
-            <h2 style={{ fontWeight: 800, fontSize: 18, color: "#f97316", textTransform: "uppercase", letterSpacing: 1 }}>Edit Team Names</h2>
-            <p style={{ fontSize: 12, color: "#64748b", margin: "4px 0 16px" }}>Changes apply instantly across the bracket.</p>
+            <h2 style={{ fontWeight: 800, fontSize: 18, color: "#f97316", textTransform: "uppercase", letterSpacing: 1 }}>
+              Edit Team Names
+            </h2>
+            <p style={{ fontSize: 12, color: "#64748b", margin: "4px 0 16px" }}>
+              Changes apply instantly across the bracket (saved locally in this browser).
+            </p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               {Object.keys(INIT_TEAMS).map(k => (
-                <div key={k} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div key={k} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, color: "#334155", width: 26, flexShrink: 0 }}>{k}</span>
                   <input
                     value={teams[k]}
                     onChange={e => setTeams(prev => ({ ...prev, [k]: e.target.value }))}
                     placeholder={INIT_TEAMS[k]}
                     style={S.input}
                     onFocus={e => e.target.style.borderColor = "#f97316"}
-                    onBlur={e => e.target.style.borderColor = "#1e293b"}
+                    onBlur={e  => e.target.style.borderColor = "#1e293b"}
                   />
                 </div>
               ))}
@@ -385,36 +361,34 @@ export default function EidBaibalaa() {
 
 // ─── STYLES ───
 const S = {
-  root: { fontFamily: "'DM Sans',sans-serif", background: "#0c1120", color: "#e2e8f0", minHeight: "100vh", display: "flex", flexDirection: "column" },
-  header: { background: "linear-gradient(135deg,#0f172a,#1a1040)", borderBottom: "2px solid #f97316", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 },
-  title: { fontWeight: 800, fontSize: 22, letterSpacing: 3, background: "linear-gradient(90deg,#f97316,#fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", margin: 0 },
-  subtitle: { fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: "#64748b", marginTop: 2 },
-  btnP: { fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 11, padding: "7px 14px", border: "none", borderRadius: 6, cursor: "pointer", textTransform: "uppercase", letterSpacing: 1, background: "#f97316", color: "#0c1120" },
-  btnD: { fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 11, padding: "7px 14px", border: "1px solid #dc2626", borderRadius: 6, cursor: "pointer", textTransform: "uppercase", letterSpacing: 1, background: "transparent", color: "#dc2626" },
-  tabs: { display: "flex", background: "#0f172a", borderBottom: "1px solid #1e293b", position: "sticky", top: 0, zIndex: 10 },
-  tab: { flex: 1, padding: "11px 8px", textAlign: "center", fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: 1.5, textTransform: "uppercase", cursor: "pointer", border: "none", background: "transparent", color: "#475569", borderBottom: "3px solid transparent", transition: "all .15s" },
-  tabOn: { color: "#f97316", borderBottomColor: "#f97316", background: "#f9731608" },
-  scroll: { flex: 1, overflowX: "auto", overflowY: "auto", padding: 20 },
-  bracket: { display: "flex", gap: 12, minWidth: "max-content", alignItems: "stretch" },
-  roundCol: { display: "flex", flexDirection: "column", minWidth: 195 },
-  rlabel: { fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: 2, padding: "4px 8px", marginBottom: 8, borderLeft: "3px solid #f97316" },
-  matchesCol: { display: "flex", flexDirection: "column", justifyContent: "space-around", flex: 1, gap: 4 },
-  card: { background: "#111827", border: "1px solid #ffffff10", borderRadius: 6, overflow: "hidden", position: "relative", transition: "border-color .15s" },
-  mnum: { position: "absolute", top: 2, right: 5, fontFamily: "'IBM Plex Mono',monospace", fontSize: 8, color: "#334155", zIndex: 1 },
-  slot: { padding: "7px 10px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: 30, color: "#94a3b8", transition: "all .12s", userSelect: "none", cursor: "default" },
-  pick: { cursor: "pointer" },
-  win: { background: "linear-gradient(90deg,#22c55e18,#22c55e08)", color: "#4ade80", fontWeight: 700, cursor: "pointer" },
-  lose: { opacity: .35, textDecoration: "line-through" },
-  div: { height: 1, background: "#ffffff08" },
-  finals: { display: "flex", flexDirection: "column", alignItems: "center", padding: "40px 20px" },
-  gfCard: { background: "linear-gradient(135deg,#1a1040,#0f172a)", border: "2px solid #f97316", borderRadius: 12, padding: 28, minWidth: 320, maxWidth: 420, textAlign: "center" },
-  gfTitle: { fontWeight: 800, fontSize: 18, letterSpacing: 3, color: "#f97316", margin: 0 },
-  gfs: { padding: "14px 18px", fontWeight: 700, fontSize: 15, borderRadius: 8, margin: "6px 0", color: "#94a3b8", background: "#111827", transition: "all .15s", userSelect: "none", cursor: "default" },
-  gfWin: { background: "linear-gradient(90deg,#f97316,#fbbf24)", color: "#0c1120", cursor: "pointer" },
-  gfVs: { fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: "#475569", margin: "4px 0", letterSpacing: 2, textAlign: "center" },
-  champ: { marginTop: 20, padding: "16px 24px", background: "linear-gradient(135deg,#f97316,#fbbf24)", borderRadius: 12, textAlign: "center" },
-  hint: { marginTop: 20, fontSize: 12, color: "#475569", fontFamily: "'IBM Plex Mono',monospace", textAlign: "center" },
-  overlay: { position: "fixed", inset: 0, background: "#000c", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
-  panel: { background: "#111827", border: "1px solid #1e293b", borderRadius: 14, width: "100%", maxWidth: 720, maxHeight: "85vh", overflowY: "auto", padding: 24 },
-  input: { flex: 1, background: "#0c1120", border: "1px solid #1e293b", borderRadius: 5, padding: "7px 10px", fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#e2e8f0", outline: "none", transition: "border-color .15s", width: "100%" },
+  root:      { fontFamily: "'DM Sans',sans-serif", background: "#0c1120", color: "#e2e8f0", minHeight: "100vh", display: "flex", flexDirection: "column" },
+  header:    { background: "linear-gradient(135deg,#0f172a,#1a1040)", borderBottom: "2px solid #f97316", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 },
+  title:     { fontWeight: 800, fontSize: 22, letterSpacing: 3, background: "linear-gradient(90deg,#f97316,#fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", margin: 0 },
+  subtitle:  { fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: "#64748b", marginTop: 2 },
+  btnP:      { fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 11, padding: "7px 14px", border: "none", borderRadius: 6, cursor: "pointer", textTransform: "uppercase", letterSpacing: 1, background: "#f97316", color: "#0c1120" },
+  tabs:      { display: "flex", background: "#0f172a", borderBottom: "1px solid #1e293b", position: "sticky", top: 0, zIndex: 10 },
+  tab:       { flex: 1, padding: "11px 8px", textAlign: "center", fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: 1.5, textTransform: "uppercase", cursor: "pointer", border: "none", background: "transparent", color: "#475569", borderBottom: "3px solid transparent", transition: "all .15s" },
+  tabOn:     { color: "#f97316", borderBottomColor: "#f97316", background: "#f9731608" },
+  scroll:    { flex: 1, overflowX: "auto", overflowY: "auto", padding: 20 },
+  bracket:   { display: "flex", gap: 12, minWidth: "max-content", alignItems: "stretch" },
+  roundCol:  { display: "flex", flexDirection: "column", minWidth: 200 },
+  rlabel:    { fontFamily: "'IBM Plex Mono',monospace", fontSize: 10, fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: 2, padding: "4px 8px", marginBottom: 8, borderLeft: "3px solid #f97316" },
+  matchesCol:{ display: "flex", flexDirection: "column", justifyContent: "space-around", flex: 1, gap: 4 },
+  card:      { background: "#111827", border: "1px solid #ffffff10", borderRadius: 6, overflow: "hidden", position: "relative", transition: "border-color .15s" },
+  mnum:      { position: "absolute", top: 2, right: 5, fontFamily: "'IBM Plex Mono',monospace", fontSize: 8, color: "#334155", zIndex: 1 },
+  slot:      { padding: "7px 10px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", minHeight: 30, color: "#94a3b8", userSelect: "none" },
+  win:       { background: "linear-gradient(90deg,#22c55e18,#22c55e08)", color: "#4ade80", fontWeight: 700 },
+  lose:      { opacity: .35, textDecoration: "line-through" },
+  div:       { height: 1, background: "#ffffff08" },
+  finals:    { display: "flex", flexDirection: "column", alignItems: "center", padding: "40px 20px" },
+  gfCard:    { background: "linear-gradient(135deg,#1a1040,#0f172a)", border: "2px solid #f97316", borderRadius: 12, padding: 28, minWidth: 320, maxWidth: 420, textAlign: "center" },
+  gfTitle:   { fontWeight: 800, fontSize: 18, letterSpacing: 3, color: "#f97316", margin: 0 },
+  gfs:       { padding: "14px 18px", fontWeight: 700, fontSize: 15, borderRadius: 8, margin: "6px 0", color: "#94a3b8", background: "#111827", userSelect: "none" },
+  gfWin:     { background: "linear-gradient(90deg,#f97316,#fbbf24)", color: "#0c1120" },
+  gfVs:      { fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, color: "#475569", margin: "4px 0", letterSpacing: 2, textAlign: "center" },
+  champ:     { marginTop: 20, padding: "16px 24px", background: "linear-gradient(135deg,#f97316,#fbbf24)", borderRadius: 12, textAlign: "center" },
+  hint:      { marginTop: 20, fontSize: 12, color: "#475569", fontFamily: "'IBM Plex Mono',monospace", textAlign: "center" },
+  overlay:   { position: "fixed", inset: 0, background: "#000c", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 },
+  panel:     { background: "#111827", border: "1px solid #1e293b", borderRadius: 14, width: "100%", maxWidth: 720, maxHeight: "85vh", overflowY: "auto", padding: 24 },
+  input:     { flex: 1, background: "#0c1120", border: "1px solid #1e293b", borderRadius: 5, padding: "7px 10px", fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#e2e8f0", outline: "none", transition: "border-color .15s", width: "100%" },
 };
