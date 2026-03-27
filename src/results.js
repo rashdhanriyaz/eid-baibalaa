@@ -28,28 +28,66 @@
 
 export const RESULTS = {
   // ── Upper R1 ─────────────────────────────────────────────────────────────
-  1: "t2",   // Kuda Henveiru United  vs  The One Sports Club
-  // 2: "t3",   // Kuda Henveiru Lions   vs  The Beegees
-  // 3: "t5",   // Lorenzo Sports Club   vs  TC Sports Club
-  // 4: "t7",   // Buru Sports Club      vs  Club Kaasinjee
-  // 5: "t9",   // Kaasinjaas            vs  TC Fraternity
-  // 6: "t11",  // The Wolves Club       vs  Janavareeyans
+  1:  "t2",   // The One Sports Club
+  2:  "t4",   // The Beegees
+  3:  "t5",   // Lorenzo Sports Club
+  4:  "t8",   // Club Kaasinjee
+  5:  "t9",   // Kaasinjaas
+  6:  "t11",  // The Wolves Club
 
   // ── Upper R2 ─────────────────────────────────────────────────────────────
-  // 7:  "t14", // Club Teenage          vs  Club Zefrol
-  // 8:  "t16", // Odi Sports Club       vs  SDZ Sharks
-  // 9:  "t18", // Odi Titans            vs  Zeppo New Generation
-  // 10: "t21", // Zeppo Sports Club     vs  TC Classique
-  // 11: "t24", // Hahha Vaikanmathi     vs  West Sports Club
-  // 12: "t27", // Janavaree Magu SC     vs  Alpha Wolves
-  // 13: "t29", // Lorenzo Hyenas        vs  JEB United
-  // 14: "t31", // Teenage Veterans      vs  Club 010
-  // 15: "t34", // VNT Sports Club       vs  VK Sports Club
-  // 16: "t37", // Lions & Tigers        vs  TFT
-  // 17: "t13", // TC Red Lions          vs  winner of M1
-  // 18: "t20", // Kuda Henveiru Street  vs  winner of M2
-  // 19: "t23", // LT Sports Club        vs  winner of M3
-  // 20: "t26", // BG Sports Club        vs  winner of M4
-  // 21: "t33", // Meet the Eagles       vs  winner of M5
-  // 22: "t36", // Hulhumale' SC         vs  winner of M6
+  7:  "t15",  // Club Zefrol
+  8:  "t16",  // Odi Sports Club
+  9:  "t18",  // Odi Titans
+  10: "t21",  // Zeppo Sports Club
+  11: "t24",  // Hahha Vaikanmathi
+  12: "t28",  // Alpha Wolves
+  13: "t30",  // JEB United
+  14: "t32",  // Club 010
+  15: "t34",  // VNT Sports Club
+  16: "t38",  // TFT
+  17: "t2",   // The One Sports Club
+  18: "t4",   // The Beegees
+  19: "t5",   // Lorenzo Sports Club
+  20: "t26",  // BG Sports Club
+  21: "t9",   // Kaasinjaas
+  22: "t11",  // The Wolves Club
+
+  // ── Losers R1 ────────────────────────────────────────────────────────────
+  23: "t14",  // Club Teenage
+  24: "t10",  // TC Fraternity
+  25: "t7",   // Buru Sports Club
+  26: "t6",   // TC Sports Club
+  27: "t3",   // Kuda Henveiru Lions
+  28: "t1",   // Kuda Henveiru United
+
+  // ── Losers R2 ────────────────────────────────────────────────────────────
+  29: "t20",  // Kuda Henveiru Street
+  30: "t35",  // VK Sports Club
+  31: "t14",  // Club Teenage
+  32: "t10",  // TC Fraternity
+  33: "t23",  // LT Sports Club
+  34: "t8",   // Club Kaasinjee
+  35: "t3",   // Kuda Henveiru Lions
+  36: "t1",   // Kuda Henveiru United
+
+  // ── Upper R3 ─────────────────────────────────────────────────────────────
+  37: "t16",  // Odi Sports Club
+  38: "t32",  // Club 010
+  39: "t15",  // Club Zefrol
+  40: "t21",  // Zeppo Sports Club
+  41: "t5",   // Lorenzo Sports Club
+  42: "t26",  // BG Sports Club
+  43: "t34",  // VNT Sports Club
+  44: "t11",  // The Wolves Club
+
+  // ── Losers R3 ────────────────────────────────────────────────────────────
+  45: "t18",  // Odi Titans
+  46: "t10",  // TC Fraternity
+  47: "t8",   // Club Kaasinjee
+  48: "t4",   // The Beegees
+  49: "t1",   // Kuda Henveiru United
+  50: "t28",  // Alpha Wolves
+  51: "t9",   // Kaasinjaas
+  52: "t38",  // TFT
 };
