@@ -90,5 +90,5 @@ export const RESULTS = {
   50: "t28",  // Alpha Wolves
   51: "t9",   // Kaasinjaas
   52: "t38",  // TFT
-  //53: "t8",   // Club Kaasinjee
+  53: "t8",   // Club Kaasinjee
 };
