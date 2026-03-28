@@ -91,4 +91,5 @@ export const RESULTS = {
   51: "t9",   // Kaasinjaas
   52: "t38",  // TFT
   53: "t8",   // Club Kaasinjee
+  54: "t1",   // Kuda Henveiru United
 };
