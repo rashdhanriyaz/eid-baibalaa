@@ -95,5 +95,8 @@ export const RESULTS = {
   55: "t10",   // TC Fraternity
   56: "t38",   // TFT
   57: "t16",   // Odi Sports Club
+  58: "t21",   // Zeppo Sports Club
+  59: "t26",   // BG Sports Club
+  
 
 };
