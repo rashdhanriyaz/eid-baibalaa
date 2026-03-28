@@ -93,4 +93,5 @@ export const RESULTS = {
   53: "t8",   // Club Kaasinjee
   54: "t1",   // Kuda Henveiru United
   55: "t10"   // TC Fraternity
+  56: "t38"   // TFT
 };
