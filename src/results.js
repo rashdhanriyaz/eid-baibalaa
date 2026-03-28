@@ -97,6 +97,6 @@ export const RESULTS = {
   57: "t16",   // Odi Sports Club
   58: "t21",   // Zeppo Sports Club
   59: "t26",   // BG Sports Club
-  
+  60: "t11",   // The Wolves Club
 
 };
