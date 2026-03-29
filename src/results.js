@@ -100,4 +100,5 @@ export const RESULTS = {
   60: "t11",   // The Wolves Club
   63: "t32",   // Club 010
   64: "t8",    // Club Kaasinjee
+  61: "t15",   // Club Zefrol
 };
