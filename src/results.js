@@ -101,4 +101,5 @@ export const RESULTS = {
   63: "t32",   // Club 010
   64: "t8",    // Club Kaasinjee
   61: "t15",   // Club Zefrol
+  62: "t5",    // Lorenzo Sports Club
 };
