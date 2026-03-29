@@ -99,4 +99,5 @@ export const RESULTS = {
   59: "t26",   // BG Sports Club
   60: "t11",   // The Wolves Club
   63: "t32",   // Club 010
+  64: "t8",    // Club Kaasinjee
 };
